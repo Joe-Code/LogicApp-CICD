@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32510.428
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "LogicApp-CICD.DeploymentGroup", "LogicApp-CICD.DeploymentGroup\LogicApp-CICD.DeploymentGroup.deployproj", "{F9BBBD19-FFCF-4620-93D8-1D8013B89DA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{22E66649-DA19-4803-A8E9-89A0E18976E9}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9BBBD19-FFCF-4620-93D8-1D8013B89DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BBBD19-FFCF-4620-93D8-1D8013B89DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BBBD19-FFCF-4620-93D8-1D8013B89DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BBBD19-FFCF-4620-93D8-1D8013B89DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F462B25-2EB4-45AA-B5B6-02FED9FBC154}
+	EndGlobalSection
+EndGlobal
