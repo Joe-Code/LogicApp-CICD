@@ -2,8 +2,17 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "logicAppName": {
-      "value": "jtf-logicapp-demo"
+    "logicAppResponderName": {
+      "value": "responder-logicapp"
+    },
+    "logicAppRequesterName": {
+      "value": "requesting-logicapp"
+    },
+    "logicAppLocation": {
+      "value": "eastus"
+    },
+    "paramfile-workflowID": {
+      "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', parameters('logicAppResponderName'))]"
     }
   }
 }

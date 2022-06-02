@@ -2,12 +2,20 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "logicAppName": {
+    "logicAppResponderName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 80,
       "metadata": {
-        "description": "Name of the Logic App."
+        "description": "Name of the Logic App that is the Responder."
+      }
+    },
+    "logicAppRequesterName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "metadata": {
+        "description": "Name of the Logic App that is the Requester."
       }
     },
     "logicAppLocation": {
@@ -15,45 +23,152 @@
       "defaultValue": "[resourceGroup().location]",
       "allowedValues": [
         "[resourceGroup().location]",
-        "australiaeast",
-        "australiasoutheast",
-        "brazilsouth",
         "centralus",
-        "eastasia",
         "eastus",
         "eastus2",
-        "japaneast",
-        "japanwest",
         "northcentralus",
-        "northeurope",
         "southcentralus",
-        "southeastasia",
-        "westeurope",
         "westus"
       ],
       "metadata": {
         "description": "Location of the Logic App."
+      },
+      "paramfile-workflowID": {
+        "type": "string",
+        "metadata": {
+          "description": "WorkflowId constructed in parameters file."
+        }
       }
     }
   },
-  "variables": {},
+  "variables": {
+    "workflowID": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', parameters('logicAppResponderName'))]"
+  },
   "resources": [
     {
-      "name": "[parameters('logicAppName')]",
+      "name": "[parameters('logicAppResponderName')]",
       "type": "Microsoft.Logic/workflows",
       "location": "[parameters('logicAppLocation')]",
       "tags": {
-        "displayName": "LogicApp"
+        "displayName": "Responder Logic App"
       },
       "apiVersion": "2016-06-01",
       "properties": {
         "definition": {
           "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "Response": {
+              "inputs": {
+                "body": "@triggerOutputs()['headers']",
+                "statusCode": 200
+              },
+              "kind": "Http",
+              "runAfter": {},
+              "type": "Response"
+            }
+          },
           "contentVersion": "1.0.0.0",
-          "actions": {},
           "outputs": {},
           "parameters": {},
-          "triggers": {}
+          "triggers": {
+            "manual": {
+              "inputs": {
+                "method": "POST",
+                "schema": {
+                  "properties": {
+                    "siteURL": {
+                      "type": "string"
+                    },
+                    "subscriptionID": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "kind": "Http",
+              "type": "Request"
+            }
+          }
+        },
+        "parameters": {}
+      }
+    },
+    {
+      "name": "[parameters('logicAppRequesterName')]",
+      "type": "Microsoft.Logic/workflows",
+      "location": "[parameters('logicAppLocation')]",
+      "tags": {
+        "displayName": "Requesting Logic App"
+      },
+      "apiVersion": "2016-06-01",
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "Condition": {
+              "actions": {
+                "ResponseLogicApp": {
+                  "inputs": {
+                    "body": {
+                      "siteURL": "www.hockeyportals.com",
+                      "subscriptionID": "unknown"
+                    },
+                    "host": {
+                      "triggerName": "manual",
+                      "workflow": {
+                        "id": "[variables('workflowID')]"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "type": "Workflow"
+                }
+              },
+              "else": {
+                "actions": {
+                  "Terminate": {
+                    "inputs": {
+                      "runStatus": "Cancelled"
+                    },
+                    "runAfter": {},
+                    "type": "Terminate"
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@triggerBody()?['fireWorkflow']",
+                      true
+                    ]
+                  }
+                ]
+              },
+              "runAfter": {},
+              "type": "If"
+            }
+          },
+          "contentVersion": "1.0.0.0",
+          "outputs": {},
+          "parameters": {},
+          "triggers": {
+            "manual": {
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "fireWorkflow": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "kind": "Http",
+              "type": "Request"
+            }
+          }
         },
         "parameters": {}
       }

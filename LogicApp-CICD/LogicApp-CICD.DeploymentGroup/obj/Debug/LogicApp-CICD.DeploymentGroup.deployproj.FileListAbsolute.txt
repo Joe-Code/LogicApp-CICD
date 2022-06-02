@@ -1,1 +1,2 @@
 C:\Repos\LogicApp-CICD\LogicApp-CICD\LogicApp-CICD.DeploymentGroup\obj\Debug\LogicApp-CICD.DeploymentGroup.deployproj.CoreCompileInputs.cache
+C:\Users\jfitzgerald\source\repos\LogicApp-CICD\LogicApp-CICD\LogicApp-CICD.DeploymentGroup\obj\Debug\LogicApp-CICD.DeploymentGroup.deployproj.CoreCompileInputs.cache

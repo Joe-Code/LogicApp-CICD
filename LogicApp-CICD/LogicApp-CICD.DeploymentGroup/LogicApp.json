@@ -32,6 +32,12 @@
       ],
       "metadata": {
         "description": "Location of the Logic App."
+      },
+      "paramfile-workflowID": {
+        "type": "string",
+        "metadata": {
+          "description": "WorkflowId constructed in parameters file."
+        }
       }
     }
   },
